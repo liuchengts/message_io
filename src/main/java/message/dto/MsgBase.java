@@ -2,22 +2,11 @@ package message.dto;
 import java.io.File;
 
 /******
- * 所有消息机制的基类
- * @author Administrator
+ * 所有消息的基类
+ * @author lc
  *
  */
 public class MsgBase {
-	private static MsgBase msgBase = null;
-	static {
-		if(null==msgBase){
-			msgBase = new MsgBase();
-		}
-	}
-	private MsgBase (){}
-	public static MsgBase getMsgBase() {
-		return msgBase;
-	}
-
 	private  String   ip;//ip
 	private  Integer  port_Text;//TEXT端口号
 	private  Integer  port_Voice;//音频端口号
@@ -146,38 +135,5 @@ public class MsgBase {
 		MPlayVideoAuthorization = mPlayVideoAuthorization;
 	}
 
-	/***
-	 * 普通文本端口
-	 */
-	public static final Integer  TEXT_PORT =9090;
-	/***
-	 * 语音端口
-	 */
-	public static final Integer  VOICE_PORT =9091;
-	/***
-	 * 视频端口
-	 */
-	public static final Integer  VIDEO_PORT =9092;
-	/****
-	 * 音频消息授权  成功  1
-	 */
-	public static final  Integer  MPLAYVOICEAUTHORIZATION_YES=1;
-	/****
-	 * 视频消息授权  成功  1
-	 */
-	public static final  Integer  MPLAYVIDEOAUTHORIZATION_YES=1;
-	/****
-	 * 音频消息授权  失败  2
-	 */
-	public static final  Integer  MPLAYVOICEAUTHORIZATION_NO=2;
-	/****
-	 * 视频消息授权  失败  2
-	 */
-	public static final  Integer  MPLAYVIDEOAUTHORIZATION_NO=2;
-	/****
-	 * 配置文件默认地址
-	 */
-//	public static final  String  pzxml="c:/setting..xml";
-	public static final  String  pzxml="/Users/apple/Documents/lc/work/message_io/src/main/resources/setting.xml";
 
 }
