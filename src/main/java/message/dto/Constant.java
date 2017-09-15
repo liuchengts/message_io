@@ -56,9 +56,22 @@ public class Constant {
      * 本机ip
      */
     public static final String  LOCALHOST ="127.0.0.1";
+    /***
+     * 中央服务器host
+     */
+    public static final String  SERVERHOST ="www.modaolc.com";
+    /***
+     * 中央服务器端口
+     */
+    public static final Integer  SERVERPROT =8101;
     /****
      * 检测端口区间
      * 8000,8100
      */
     public static final  Integer[] arrayProt={8000,8100};
+
+    /***
+     * 超时时间
+     */
+    public static final Integer  TIMEOUT =10000;
 }

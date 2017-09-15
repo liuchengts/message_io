@@ -3,8 +3,9 @@ package message.server.vote;
 import message.dto.Constant;
 
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
+import java.net.SocketAddress;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -58,38 +59,46 @@ public class PortVote {
     public static boolean checkPort(int prot) {
         return (prot >= start && prot <= end && !portSet.contains(prot) && !isLocalPortUsing(prot));
     }
-
-    public static void main(String args[]) {
-        getUsablePort();
+    /**
+     * 校验中央服务器端口是否可用
+     *
+     * @return true表示可用 false表示不可用
+     */
+    public static boolean checkPort() {//Constant.SERVERHOST
+        return isPortUsing("116.62.43.22",Constant.SERVERPROT);
     }
-
+    public static void main(String[] args) {
+        System.out.println(checkPort());
+    }
     /**
      * 测试本机端口是否被使用
      *
      * @param port
-     * @return
+     * @return 在使用返回true，不在使用返回false
      */
     public static boolean isLocalPortUsing(int port) {
-        //如果该端口还在使用则返回true,否则返回false,127.0.0.1代表本机
         return isPortUsing(Constant.LOCALHOST, port);
     }
 
-    /***
+    /**
      * 测试主机Host的port端口是否被使用
-     * @param host
-     * @param port
-     * @throws UnknownHostException
+     * @param host host
+     * @param port 端口
+     * @return 在使用返回true，不在使用返回false
      */
     public static boolean isPortUsing(String host, int port) {
         boolean flag;
+        long t1=System.currentTimeMillis();
         try {
-            InetAddress Address = InetAddress.getByName(host);
-            Socket socket = new Socket(Address, port);  //建立一个Socket连接
+            Socket socket = new Socket();
+            SocketAddress socketAddress = new InetSocketAddress(InetAddress.getByName(host), port);
+            socket.connect(socketAddress, Constant.TIMEOUT);
             flag = true;
             socket.close();
         } catch (Exception e) {
             flag = false;
         }
+        System.out.println("耗时："+ (System.currentTimeMillis()-t1));
         return flag;
     }
 }
