@@ -74,4 +74,9 @@ public class Constant {
      * 超时时间
      */
     public static final Integer  TIMEOUT =10000;
+
+    /***
+     * 线程休眠时间长
+     */
+    public static final long  MILLIS =1000;
 }

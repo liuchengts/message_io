@@ -24,14 +24,17 @@ public class PortVote {
      * @return 可用端口
      */
     public static int getUsablePort() {
+        int prot = 0;
         for (int i = start; i <= end; i++) {
             if (!portSet.contains(i) && !isLocalPortUsing(i)) {
                 System.out.println("获得可用端口:" + i);
                 portSet.add(i);
-                return i;
+                prot = i;
+                break;
             }
         }
-        return 0;
+        // 调用服务监听程序，初始化监听
+        return prot;
     }
 
     /**
@@ -59,17 +62,16 @@ public class PortVote {
     public static boolean checkPort(int prot) {
         return (prot >= start && prot <= end && !portSet.contains(prot) && !isLocalPortUsing(prot));
     }
+
     /**
      * 校验中央服务器端口是否可用
      *
-     * @return true表示可用 false表示不可用
+     * @return 使用返回true，不在使用返回false
      */
-    public static boolean checkPort() {//Constant.SERVERHOST
-        return isPortUsing("116.62.43.22",Constant.SERVERPROT);
+    public static boolean checkPort() {
+        return isPortUsing(Constant.SERVERHOST, Constant.SERVERPROT);
     }
-    public static void main(String[] args) {
-        System.out.println(checkPort());
-    }
+
     /**
      * 测试本机端口是否被使用
      *
@@ -82,13 +84,14 @@ public class PortVote {
 
     /**
      * 测试主机Host的port端口是否被使用
+     *
      * @param host host
      * @param port 端口
      * @return 在使用返回true，不在使用返回false
      */
     public static boolean isPortUsing(String host, int port) {
         boolean flag;
-        long t1=System.currentTimeMillis();
+        long t1 = System.currentTimeMillis();
         try {
             Socket socket = new Socket();
             SocketAddress socketAddress = new InetSocketAddress(InetAddress.getByName(host), port);
@@ -98,7 +101,7 @@ public class PortVote {
         } catch (Exception e) {
             flag = false;
         }
-        System.out.println("耗时："+ (System.currentTimeMillis()-t1));
+        System.out.println("耗时：" + (System.currentTimeMillis() - t1));
         return flag;
     }
 }

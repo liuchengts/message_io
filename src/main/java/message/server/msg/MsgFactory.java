@@ -1,6 +1,5 @@
 package message.server.msg;
 
-import message.dto.Constant;
 import message.dto.MsgBase;
 import message.server.vote.PortVote;
 import message.utils.NetworkUtils;
@@ -26,17 +25,11 @@ public class MsgFactory {
         return LazyHolder.INSTANCE;
     }
 
-    public static MsgBase creationMsgBase(String type) {
+    public static MsgBase creationMsgBase(String ip) {
         MsgBase msgBase = new MsgBase();
-//        msgBase.setIp();
+        msgBase.setIp(ip);
+        msgBase.setPort(PortVote.getUsablePort());
         msgBase.setMac(NetworkUtils.getPhysicalNetworkMAC());
-        if (Constant.VIDEO.equals(type)) {
-            msgBase.setPort_Voice(PortVote.getUsablePort());
-        } else if (Constant.VOICE.equals(type)) {
-            msgBase.setPort_Voice(PortVote.getUsablePort());
-        } else {
-            msgBase.setPort_Text(PortVote.getUsablePort());
-        }
         return msgBase;
     }
 
