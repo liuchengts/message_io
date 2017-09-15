@@ -18,5 +18,8 @@ public class App {
         MsgBase msgBase = MsgFactory.creationMsgBase("127.0.0.1");
         msgBase.setResponse("你好");
         SendCore.send(msgBase);
+        SendCore.send(msgBase);
+        SendCore.send(msgBase);
+        SendCore.send(msgBase);
     }
 }

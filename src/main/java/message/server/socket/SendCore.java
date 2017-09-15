@@ -37,7 +37,6 @@ public class SendCore {
             while (true) {
                 try {
                     if (null == msgBase) {
-                        System.out.println("消息内容是空的，休息" + Constant.MILLIS + "ms");
                         sleep(Constant.MILLIS);
                         continue;
                     }
@@ -49,7 +48,6 @@ public class SendCore {
                 try {
                     //客户端socket指定服务器的地址和端口号
                     socket = new Socket(msgBase.getIp(), msgBase.getPort());
-                    System.out.println("发送端ip：" + socket.getInetAddress().getHostAddress());
                 } catch (Exception e) {
                     throw new RuntimeException("发送线程无法建立socket连接", e);
                 }

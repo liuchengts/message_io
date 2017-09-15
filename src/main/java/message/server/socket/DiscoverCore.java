@@ -38,7 +38,6 @@ public class DiscoverCore {
                     assert s != null;
                     socket = s.accept();
                     if (null == socket) {
-                        System.out.println("没有消息，休息" + Constant.MILLIS + "ms");
                         sleep(Constant.MILLIS);
                         continue;
                     }

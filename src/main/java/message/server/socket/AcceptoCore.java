@@ -37,7 +37,6 @@ public class AcceptoCore {
                 try {
                     Set<Integer> createProt = maintain();
                     if (createProt.size() <= 0) {
-                        System.out.println("没有需要监听的端口，休息" + Constant.MILLIS + "ms");
                         sleep(Constant.MILLIS);
                         continue;
                     }
