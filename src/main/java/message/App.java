@@ -4,7 +4,6 @@ package message;
 import message.dto.MsgBase;
 import message.server.msg.MsgFactory;
 import message.server.socket.AcceptoCore;
-import message.server.socket.DiscoverCore;
 import message.server.socket.SendCore;
 
 /**
@@ -12,14 +11,12 @@ import message.server.socket.SendCore;
  */
 public class App {
     public static void main(String[] args) {
-        new AcceptoCore();
-        new DiscoverCore();
-        new SendCore();
-        MsgBase msgBase = MsgFactory.creationMsgBase("127.0.0.1");
-        msgBase.setResponse("你好");
-        SendCore.send(msgBase);
-        SendCore.send(msgBase);
-        SendCore.send(msgBase);
-        SendCore.send(msgBase);
+        AcceptoCore.getInstance();
+//        DiscoverCore.getInstance();
+        for(int i=0;i<3;i++){
+            MsgBase msgBase = MsgFactory.creationMsgBase("127.0.0.1");
+            msgBase.setResponse("你好"+i);
+            SendCore.send(msgBase);
+        }
     }
 }

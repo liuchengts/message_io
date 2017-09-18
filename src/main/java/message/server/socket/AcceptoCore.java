@@ -20,6 +20,18 @@ public class AcceptoCore {
     private static final AcceptoCore.CoreListen coreListen;
     private static volatile Map<Integer, ServerSocket> cacheServerSocket = new HashMap<>();
 
+    private static class LazyHolder {
+        private static final AcceptoCore INSTANCE = new AcceptoCore();
+    }
+
+    private AcceptoCore() {
+
+    }
+
+    public static final AcceptoCore getInstance() {
+        return AcceptoCore.LazyHolder.INSTANCE;
+    }
+
     static {
         core = new AcceptoCore.Core();
         core.start();
@@ -37,7 +49,6 @@ public class AcceptoCore {
                 try {
                     Set<Integer> createProt = maintain();
                     if (createProt.size() <= 0) {
-                        sleep(Constant.MILLIS);
                         continue;
                     }
                     for (Integer key : createProt) {
@@ -69,6 +80,7 @@ public class AcceptoCore {
                 //端口已经释放了，这里需要关闭掉对应的cacheServerSocket
                 cacheServerSocket.get(key).close();
                 cacheServerSocket.remove(key);
+                disabledPorts.remove(key);
             }
             for (Integer key : disabledPorts) {
                 //不可用端口不在cacheServerSocket列表中，需要创建
@@ -90,12 +102,22 @@ public class AcceptoCore {
         public void run() {
             System.out.println("监听服务线程启动...");
             while (true) {
+                try {
+                    if (cacheServerSocket.size() <= 0) {
+                        System.out.println("休息" + Constant.MILLIS + "ms");
+                        sleep(Constant.MILLIS);
+                        continue;
+                    }
+                } catch (Exception e) {
+
+                }
+
                 for (ServerSocket serverSocket : cacheServerSocket.values()) {
                     BufferedReader br = null;
                     try {
                         Socket socket = serverSocket.accept();
                         if (null == socket) {
-                            System.out.println("没有消息，休息" + Constant.MILLIS + "ms");
+                            System.out.println("没有监听消息，休息" + Constant.MILLIS + "ms");
                             sleep(Constant.MILLIS);
                             continue;
                         }

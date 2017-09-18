@@ -17,7 +17,7 @@ public class PortVote {
     //start--end是所要检测的端口范围
     static int start = Constant.arrayProt[0];
     static int end = Constant.arrayProt[1];
-    static Set<Integer> portSet = new HashSet<>();
+    static volatile Set<Integer> portSet = new HashSet<>();
 
     /***
      * 获得一个本机可用的端口，调用此端口后会将当前返回的端口放入已使用中
@@ -27,7 +27,6 @@ public class PortVote {
         int prot = 0;
         for (int i = start; i <= end; i++) {
             if (!portSet.contains(i) && !isLocalPortUsing(i)) {
-                System.out.println("获得可用端口:" + i);
                 portSet.add(i);
                 prot = i;
                 break;
@@ -101,7 +100,7 @@ public class PortVote {
         } catch (Exception e) {
             flag = false;
         }
-        System.out.println("耗时：" + (System.currentTimeMillis() - t1));
+        System.out.println("端口【"+port+"】检测耗时：" + (System.currentTimeMillis() - t1));
         return flag;
     }
 }

@@ -39,11 +39,8 @@ public class NetworkUtils {
                 builder.deleteCharAt(builder.length() - 1);
             }
 
-            if (builder.length() == 0) {
-                System.out.println("Sorry, can't find your MAC Address.");
-            } else {
+            if (builder.length() != 0) {
                 networkMAC = builder.toString();
-                System.out.println("Your MAC Address is " + networkMAC);
             }
         } catch (Exception e) {
             e.printStackTrace();

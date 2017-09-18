@@ -15,6 +15,18 @@ import java.net.Socket;
 public class DiscoverCore {
     private static final DiscoverCore.Core core;
 
+    private static class LazyHolder {
+        private static final DiscoverCore INSTANCE = new DiscoverCore();
+    }
+
+    private DiscoverCore() {
+
+    }
+
+    public static final DiscoverCore getInstance() {
+        return DiscoverCore.LazyHolder.INSTANCE;
+    }
+
     static {
         core = new DiscoverCore.Core();
         core.start();
