@@ -1,11 +1,6 @@
 package message.utils;
 
 import message.dto.Constant;
-import message.dto.MsgBase;
-import message.server.msg.MsgFactory;
-import message.server.socket.Launch;
-import message.server.socket.SendCore;
-
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -29,25 +24,22 @@ public class PortUtils {
         return LazyHolder.INSTANCE;
     }
 
-    static Set<Integer> disabled;
     static Set<Integer> usable;
 
     static {
-        disabled = new HashSet<>();
         usable = new HashSet<>();
+        init();
     }
 
     /**
-     * 不可用端口
-     *
-     * @return
+     * 初始化可用端口
      */
-    public static Set<Integer> getDisabled() {
-        return disabled;
-    }
-
-    public synchronized static void setDisabled(Set<Integer> disabled) {
-        PortUtils.disabled = disabled;
+    private static void init() {
+        int start = Constant.arrayProt[0];
+        int end = Constant.arrayProt[1];
+        for (int i = start; i <= end; i++) {
+            usable.add(i);
+        }
     }
 
     /**
@@ -104,7 +96,7 @@ public class PortUtils {
      */
     public synchronized static boolean isPortUsing(String host, int port) {
         boolean flag;
-        long t1 = System.currentTimeMillis();
+//        long t1 = System.currentTimeMillis();
         try {
             Socket socket = new Socket();
             SocketAddress socketAddress = new InetSocketAddress(InetAddress.getByName(host), port);
@@ -114,8 +106,9 @@ public class PortUtils {
         } catch (Exception e) {
             flag = false;
         }
-        System.out.println("端口【" + port + "】检测耗时：" + (System.currentTimeMillis() - t1));
+//        System.out.println("端口【" + port + "】检测耗时：" + (System.currentTimeMillis() - t1));
         return flag;
     }
+
 
 }

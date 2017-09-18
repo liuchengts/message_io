@@ -14,16 +14,15 @@ import java.util.Set;
 public class AcceptoCore extends Thread {
     static Map<Integer, ListenCore> listenCoreMap = new HashMap<>();
     static PortUtils portUtils = PortUtils.getInstance();
-
     public void run() {
         System.out.println("监听实例维护线程启动...");
         while (true) {
             try {
                 Set<Integer> usablePorts = portUtils.getUsable();
-                Set<Integer> disabledPorts = portUtils.getDisabled();
-                for (Integer key : disabledPorts) {
-                    if (listenCoreMap.containsKey(key)) {
+                for (Integer key : listenCoreMap.keySet()) {
+                    if (listenCoreMap.get(key).getServerSocket().isClosed()) {
                         listenCoreStop(key);
+                        usablePorts.add(key);
                     }
                 }
                 for (Integer key : usablePorts) {
@@ -31,6 +30,7 @@ public class AcceptoCore extends Thread {
                         listenCoreMap.put(key, ListenCore.initListen(key));
                     }
                 }
+                portUtils.setUsable(usablePorts);
                 sleep(Constant.MILLIS);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -45,6 +45,7 @@ public class AcceptoCore extends Thread {
      * @throws Exception
      */
     private void listenCoreStop(Integer key) throws Exception {
+        System.out.println("关掉监听"+key);
         listenCoreMap.get(key).interrupt();
         listenCoreMap.get(key).getServerSocket().close();
         listenCoreMap.remove(key);

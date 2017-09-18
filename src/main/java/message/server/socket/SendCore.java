@@ -1,6 +1,5 @@
 package message.server.socket;
 
-import message.dto.Constant;
 import message.dto.MsgBase;
 
 import java.io.*;
@@ -27,15 +26,9 @@ public class SendCore {
             PrintWriter pw = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())));
             pw.println(msgBase.getResponse());
             pw.flush();
-            System.out.println("消息发送成功");
+            System.out.println("消息发送成功：" + msgBase.getResponse() + " |" + msgBase.getPort());
         } catch (IOException e) {
             throw new RuntimeException("消息发送失败", e);
-        } finally {
-            try {
-                socket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 }

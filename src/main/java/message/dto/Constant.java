@@ -63,7 +63,7 @@ public class Constant {
     /***
      * 中央服务器端口
      */
-    public static final Integer  SERVERPROT =8020;
+    public static final Integer  SERVERPROT =8021;
     /****
      * 检测端口区间
      * 8000,8100

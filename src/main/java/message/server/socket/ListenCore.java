@@ -31,27 +31,28 @@ public class ListenCore extends Thread {
     public static ListenCore initListen(int prot) throws Exception {
         ListenCore core = new ListenCore();
         core.setServerSocket(new ServerSocket(prot));
-        System.out.println("创建了一个新的监听服务在：" + prot);
         core.start();
         return core;
     }
 
     public void run() {
+        System.out.println("监听启动..."+getServerSocket().getLocalPort());
         while (true) {
             BufferedReader br = null;
             try {
-                Socket socket = serverSocket.accept();
+                Socket socket = getServerSocket().accept();
                 if (null == socket) {
                     System.out.println("没有监听消息，休息" + Constant.MILLIS + "ms");
                     sleep(Constant.MILLIS);
                     continue;
                 }
+                System.out.println("接收端ip："+socket.getInetAddress().getHostAddress());
                 br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 if (null == br || null == br.readLine()) {
                     continue;
                 }
                 String str = br.readLine();
-                System.out.println("listen服务端接受到的消息 :" + str);
+                System.out.println("******************************listen服务端接受到的消息 :" + str);
             } catch (Exception e) {
                 try {
                     if (null != br) {
@@ -60,6 +61,7 @@ public class ListenCore extends Thread {
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
+                e.printStackTrace();
             }
         }
     }
