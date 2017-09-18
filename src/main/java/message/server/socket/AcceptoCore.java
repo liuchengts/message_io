@@ -3,7 +3,6 @@ package message.server.socket;
 import message.dto.Constant;
 import message.utils.PortUtils;
 
-import java.net.ServerSocket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -14,14 +13,14 @@ import java.util.Set;
  */
 public class AcceptoCore extends Thread {
     static Map<Integer, ListenCore> listenCoreMap = new HashMap<>();
-
-
+    static PortUtils portUtils = PortUtils.getInstance();
 
     public void run() {
+        System.out.println("监听实例维护线程启动...");
         while (true) {
             try {
-                Set<Integer> usablePorts = PortUtils.getUsable();
-                Set<Integer> disabledPorts = PortUtils.getDisabled();
+                Set<Integer> usablePorts = portUtils.getUsable();
+                Set<Integer> disabledPorts = portUtils.getDisabled();
                 for (Integer key : disabledPorts) {
                     if (listenCoreMap.containsKey(key)) {
                         listenCoreStop(key);
@@ -32,7 +31,6 @@ public class AcceptoCore extends Thread {
                         listenCoreMap.put(key, ListenCore.initListen(key));
                     }
                 }
-                System.out.println("端口监听实例维护完成，休息" + Constant.MILLIS + "ms");
                 sleep(Constant.MILLIS);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -42,6 +40,7 @@ public class AcceptoCore extends Thread {
 
     /**
      * 停止监听线程并且移除map内的缓存实例
+     *
      * @param key
      * @throws Exception
      */

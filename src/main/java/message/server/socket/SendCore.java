@@ -1,5 +1,6 @@
 package message.server.socket;
 
+import message.dto.Constant;
 import message.dto.MsgBase;
 
 import java.io.*;

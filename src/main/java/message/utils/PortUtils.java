@@ -1,6 +1,10 @@
 package message.utils;
 
 import message.dto.Constant;
+import message.dto.MsgBase;
+import message.server.msg.MsgFactory;
+import message.server.socket.Launch;
+import message.server.socket.SendCore;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -13,9 +17,25 @@ import java.util.Set;
  * Created by apple on 2017/9/18.
  */
 public class PortUtils {
+    private static class LazyHolder {
+        private static final PortUtils INSTANCE = new PortUtils();
+    }
 
-    static volatile Set<Integer> disabled = new HashSet<>();
-    static volatile Set<Integer> usable = new HashSet<>();
+    private PortUtils() {
+
+    }
+
+    public static final PortUtils getInstance() {
+        return LazyHolder.INSTANCE;
+    }
+
+    static Set<Integer> disabled;
+    static Set<Integer> usable;
+
+    static {
+        disabled = new HashSet<>();
+        usable = new HashSet<>();
+    }
 
     /**
      * 不可用端口
@@ -94,7 +114,8 @@ public class PortUtils {
         } catch (Exception e) {
             flag = false;
         }
-//        System.out.println("端口【" + port + "】检测耗时：" + (System.currentTimeMillis() - t1));
+        System.out.println("端口【" + port + "】检测耗时：" + (System.currentTimeMillis() - t1));
         return flag;
     }
+
 }

@@ -25,10 +25,10 @@ public class MsgFactory {
         return LazyHolder.INSTANCE;
     }
 
-    public static MsgBase creationMsgBase(String ip) {
+    public static MsgBase creationMsgBase(String ip,Integer prot) {
         MsgBase msgBase = new MsgBase();
         msgBase.setIp(ip);
-        msgBase.setPort(PortUtils.getUsableProt());
+        msgBase.setPort(prot);
         msgBase.setMac(NetworkUtils.getPhysicalNetworkMAC());
         return msgBase;
     }

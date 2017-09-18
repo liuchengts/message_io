@@ -28,9 +28,10 @@ public class ListenCore extends Thread {
      * @param prot
      * @return
      */
-    public static ListenCore initListen(int prot) throws  Exception{
+    public static ListenCore initListen(int prot) throws Exception {
         ListenCore core = new ListenCore();
         core.setServerSocket(new ServerSocket(prot));
+        System.out.println("创建了一个新的监听服务在：" + prot);
         core.start();
         return core;
     }
@@ -53,7 +54,7 @@ public class ListenCore extends Thread {
                 System.out.println("listen服务端接受到的消息 :" + str);
             } catch (Exception e) {
                 try {
-                    if(null!=br){
+                    if (null != br) {
                         br.close();
                     }
                 } catch (IOException e1) {
