@@ -80,7 +80,7 @@ public class Constant {
      */
     public static final long  MILLIS =1000;
     /***
-     * 端口监听线程休眠时间长
+     * 端口维护线程休眠时间长
      */
     public static final long  MILLIS_PROT =100;
 }
