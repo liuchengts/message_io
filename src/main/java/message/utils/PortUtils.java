@@ -39,7 +39,19 @@ public class PortUtils {
         return usable;
     }
 
-    public synchronized static  void setUsable(Set<Integer> usable) {
+    /**
+     * 获得一个可用的端口
+     *
+     * @return
+     */
+    public static Integer getUsableProt() {
+        for (Integer key : usable) {
+            return key;
+        }
+        return null;
+    }
+
+    public synchronized static void setUsable(Set<Integer> usable) {
         PortUtils.usable = usable;
     }
 
@@ -82,7 +94,7 @@ public class PortUtils {
         } catch (Exception e) {
             flag = false;
         }
-        System.out.println("端口【" + port + "】检测耗时：" + (System.currentTimeMillis() - t1));
+//        System.out.println("端口【" + port + "】检测耗时：" + (System.currentTimeMillis() - t1));
         return flag;
     }
 }

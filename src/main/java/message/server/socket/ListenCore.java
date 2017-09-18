@@ -13,16 +13,24 @@ import java.net.Socket;
  */
 public class ListenCore extends Thread {
 
-    private static ServerSocket serverSocket;
+    static ServerSocket serverSocket;
+
+    public ServerSocket getServerSocket() {
+        return serverSocket;
+    }
+
+    public static void setServerSocket(ServerSocket serverSocket) {
+        ListenCore.serverSocket = serverSocket;
+    }
 
     /***
      * 启动一个服务监听并且返回当前实例
-     * @param serverSocket
+     * @param prot
      * @return
      */
-    public static ListenCore initListen(ServerSocket serverSocket) {
+    public static ListenCore initListen(int prot) throws  Exception{
         ListenCore core = new ListenCore();
-        core.serverSocket = serverSocket;
+        core.setServerSocket(new ServerSocket(prot));
         core.start();
         return core;
     }
@@ -38,11 +46,16 @@ public class ListenCore extends Thread {
                     continue;
                 }
                 br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                if (null == br || null == br.readLine()) {
+                    continue;
+                }
                 String str = br.readLine();
                 System.out.println("listen服务端接受到的消息 :" + str);
             } catch (Exception e) {
                 try {
-                    br.close();
+                    if(null!=br){
+                        br.close();
+                    }
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }

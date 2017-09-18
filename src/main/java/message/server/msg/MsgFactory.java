@@ -1,8 +1,8 @@
 package message.server.msg;
 
 import message.dto.MsgBase;
-import message.server.vote.PortVote;
 import message.utils.NetworkUtils;
+import message.utils.PortUtils;
 
 import java.util.logging.Logger;
 
@@ -28,7 +28,7 @@ public class MsgFactory {
     public static MsgBase creationMsgBase(String ip) {
         MsgBase msgBase = new MsgBase();
         msgBase.setIp(ip);
-        msgBase.setPort(PortVote.getUsablePort());
+        msgBase.setPort(PortUtils.getUsableProt());
         msgBase.setMac(NetworkUtils.getPhysicalNetworkMAC());
         return msgBase;
     }

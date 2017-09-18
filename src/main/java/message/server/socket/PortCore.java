@@ -29,11 +29,13 @@ public class PortCore extends Thread{
                 }
                 PortUtils.setUsable(usable);
                 PortUtils.setDisabled(disabled);
-                System.out.println("端口维护线程休息" + Constant.MILLIS_PROT + "ms");
+//                System.out.println("端口维护线程休息" + Constant.MILLIS_PROT + "ms");
                 sleep(Constant.MILLIS_PROT);
             }catch (Exception e){
                 PortUtils.setUsable(usable);
                 PortUtils.setDisabled(disabled);
+                System.out.println("端口维护线程异常");
+                e.printStackTrace();
             }
         }
     }

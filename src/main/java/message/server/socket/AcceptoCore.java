@@ -1,74 +1,53 @@
 package message.server.socket;
 
+import message.dto.Constant;
 import message.utils.PortUtils;
 
 import java.net.ServerSocket;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 /**
  * Created by apple on 2017/9/14.
- * 消息接收，根据当前占用的端口开出对应的接收服务
+ * 维护监听服务，并且开出对应的监听服务线程
  */
 public class AcceptoCore extends Thread {
-    static volatile Map<Integer, ServerSocket> cacheServerSocket = new HashMap<>();
-    static volatile Map<Integer, ListenCore> cacheListen = new HashMap<>();
+    static Map<Integer, ListenCore> listenCoreMap = new HashMap<>();
 
-    /***
-     * 维护端口及cacheServerSocket实例缓存
-     */
+
+
     public void run() {
-        System.out.println("监听实例维护线程启动...");
         while (true) {
             try {
-                Set<Integer> createProt = maintain();
-                if (createProt.size() <= 0) {
-                    continue;
+                Set<Integer> usablePorts = PortUtils.getUsable();
+                Set<Integer> disabledPorts = PortUtils.getDisabled();
+                for (Integer key : disabledPorts) {
+                    if (listenCoreMap.containsKey(key)) {
+                        listenCoreStop(key);
+                    }
                 }
-                for (Integer key : createProt) {
-                    ServerSocket serverSocket = new ServerSocket(key);
-                    cacheServerSocket.put(key, serverSocket);
-                    cacheListen.put(key, ListenCore.initListen(serverSocket));
+                for (Integer key : usablePorts) {
+                    if (!listenCoreMap.containsKey(key)) {
+                        listenCoreMap.put(key, ListenCore.initListen(key));
+                    }
                 }
-                System.out.println("新建监听数量:" + createProt.size());
+                System.out.println("端口监听实例维护完成，休息" + Constant.MILLIS + "ms");
+                sleep(Constant.MILLIS);
             } catch (Exception e) {
-                System.out.println("服务监听端口创建异常");
+                e.printStackTrace();
             }
         }
     }
 
     /**
-     * 端口实例维护
-     *
-     * @return
+     * 停止监听线程并且移除map内的缓存实例
+     * @param key
+     * @throws Exception
      */
-    private static synchronized Set<Integer> maintain() {
-        Set<Integer> set = new HashSet<>();
-        Set<Integer> disabledPorts = PortUtils.getDisabled();
-        try {
-            for (Integer key : cacheServerSocket.keySet()) {
-                if (disabledPorts.contains(key)) {
-                    //当前端口还在使用
-                    continue;
-                }
-                //端口已经释放了，这里需要停止线程及关闭掉对应的cacheServerSocket
-                cacheListen.get(key).interrupt();
-                cacheServerSocket.get(key).close();
-                cacheServerSocket.remove(key);
-                disabledPorts.remove(key);
-            }
-            for (Integer key : disabledPorts) {
-                //不可用端口不在cacheServerSocket列表中，需要创建
-                if (!cacheServerSocket.containsKey(key)) {
-                    set.add(key);
-                }
-            }
-        } catch (Exception e) {
-            System.out.println("维护cacheServerSocket异常");
-            e.printStackTrace();
-        }
-        return set;
+    private void listenCoreStop(Integer key) throws Exception {
+        listenCoreMap.get(key).interrupt();
+        listenCoreMap.get(key).getServerSocket().close();
+        listenCoreMap.remove(key);
     }
 }

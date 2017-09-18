@@ -14,7 +14,7 @@ public class App {
     public static void main(String[] args) {
         //端口维护线程启动
         new PortCore().start();
-        new AcceptoCore();
+        new AcceptoCore().start();
 //        DiscoverCore.getInstance();
         for(int i=0;i<3;i++){
             MsgBase msgBase = MsgFactory.creationMsgBase("127.0.0.1");
