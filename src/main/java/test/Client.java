@@ -120,7 +120,7 @@ public class Client{
 
         frame = new JFrame("客户机");
         // 更改JFrame的图标：
-        frame.setIconImage(Toolkit.getDefaultToolkit().createImage(Client.class.getResource("qq.png")));
+//        frame.setIconImage(Toolkit.getDefaultToolkit().createImage(Client.class.getResource("qq.png")));
         frame.setLayout(new BorderLayout());
         frame.add(northPanel, "North");
         frame.add(centerSplit, "Center");
