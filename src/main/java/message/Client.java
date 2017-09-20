@@ -354,7 +354,7 @@ public class Client{
                         return;// 结束线程
                     } else {// 普通消息
                         System.out.println("客户机："+message);
-                        textArea.append(Utils.decoding(message) + "\r\n");
+                        textArea.append(message + "\r\n");
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
