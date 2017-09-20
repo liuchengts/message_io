@@ -87,7 +87,7 @@ public class Client{
         textField = new JTextField();
         txt_port = new JTextField("6666");
         txt_hostIp = new JTextField("www.modaolc.com");
-        txt_name = new JTextField("test");
+        txt_name = new JTextField();
         btn_start = new JButton("连接");
         btn_stop = new JButton("断开");
         btn_send = new JButton("发送");

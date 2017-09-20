@@ -353,7 +353,7 @@ public class Server {
             try {
                 this.socket = socket;
                 reader = new BufferedReader(new InputStreamReader(socket
-                        .getInputStream(),"UTF-8"));
+                        .getInputStream(),"GBK"));
                 writer = new PrintWriter(socket.getOutputStream());
                 // 接收客户端的基本用户信息
                 String inf = reader.readLine();
