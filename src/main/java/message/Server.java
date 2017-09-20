@@ -1,4 +1,5 @@
-package test;
+package message;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -352,7 +353,7 @@ public class Server {
             try {
                 this.socket = socket;
                 reader = new BufferedReader(new InputStreamReader(socket
-                        .getInputStream()));
+                        .getInputStream(),"UTF-8"));
                 writer = new PrintWriter(socket.getOutputStream());
                 // 接收客户端的基本用户信息
                 String inf = reader.readLine();

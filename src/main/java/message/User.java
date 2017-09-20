@@ -1,4 +1,4 @@
-package test;
+package message;
 
 /**
  * Created by apple on 2017/9/20.

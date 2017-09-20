@@ -1,4 +1,5 @@
-package test;
+package message;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -85,8 +86,8 @@ public class Client{
         textArea.setForeground(Color.blue);
         textField = new JTextField();
         txt_port = new JTextField("6666");
-        txt_hostIp = new JTextField("127.0.0.1");
-        txt_name = new JTextField("xiaoqiang");
+        txt_hostIp = new JTextField("www.modaolc.com");
+        txt_name = new JTextField("test");
         btn_start = new JButton("连接");
         btn_stop = new JButton("断开");
         btn_send = new JButton("发送");
@@ -224,7 +225,7 @@ public class Client{
             socket = new Socket(hostIp, port);// 根据端口号和服务器ip建立连接
             writer = new PrintWriter(socket.getOutputStream());
             reader = new BufferedReader(new InputStreamReader(socket
-                    .getInputStream()));
+                    .getInputStream(),"GBK"));
             // 发送客户端用户基本信息(用户名和ip地址)
             sendMessage(name + "@" + socket.getLocalAddress().toString());
             // 开启接收消息的线程
@@ -352,6 +353,8 @@ public class Client{
                                 JOptionPane.ERROR_MESSAGE);
                         return;// 结束线程
                     } else {// 普通消息
+
+                        System.out.println("客户机："+message);
                         textArea.append(message + "\r\n");
                     }
                 } catch (IOException e) {
