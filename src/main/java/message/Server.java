@@ -299,7 +299,7 @@ public class Server {
                     Socket socket = serverSocket.accept();
                     if (clients.size() == max) {// 如果已达人数上限
                         BufferedReader r = new BufferedReader(
-                                new InputStreamReader(socket.getInputStream(),"gbk"));
+                                new InputStreamReader(socket.getInputStream(),"utf-8"));
                         PrintWriter w = new PrintWriter(socket
                                 .getOutputStream());
                         // 接收客户端的基本用户信息
@@ -353,7 +353,7 @@ public class Server {
             try {
                 this.socket = socket;
                 reader = new BufferedReader(new InputStreamReader(socket
-                        .getInputStream(),"gbk"));
+                        .getInputStream(),"utf-8"));
                 writer = new PrintWriter(socket.getOutputStream());
                 // 接收客户端的基本用户信息
                 String inf = reader.readLine();

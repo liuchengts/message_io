@@ -17,10 +17,10 @@ public class Utils {
      * @throws Exception
      */
     public static String decoding(String message) throws Exception {
-        if(!isfag){
-            byte[] jiema = message.getBytes("gbk");
-            return new String(jiema, "utf-8");
-        }
+//        if(!isfag){
+//            byte[] jiema = message.getBytes("gbk");
+//            return new String(jiema, "utf-8");
+//        }
         return message;
     }
 

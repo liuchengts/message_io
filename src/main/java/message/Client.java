@@ -86,7 +86,7 @@ public class Client{
         textArea.setForeground(Color.blue);
         textField = new JTextField();
         txt_port = new JTextField("6666");
-        txt_hostIp = new JTextField("www.modaolc.com");
+        txt_hostIp = new JTextField("127.0.0.1");
         txt_name = new JTextField();
         btn_start = new JButton("连接");
         btn_stop = new JButton("断开");
@@ -225,7 +225,7 @@ public class Client{
             socket = new Socket(hostIp, port);// 根据端口号和服务器ip建立连接
             writer = new PrintWriter(socket.getOutputStream());
             reader = new BufferedReader(new InputStreamReader(socket
-                    .getInputStream(),"gbk"));
+                    .getInputStream(),"utf-8"));
             // 发送客户端用户基本信息(用户名和ip地址)
             sendMessage(name + "@" + socket.getLocalAddress().toString());
             // 开启接收消息的线程
