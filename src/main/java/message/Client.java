@@ -225,7 +225,7 @@ public class Client{
             socket = new Socket(hostIp, port);// 根据端口号和服务器ip建立连接
             writer = new PrintWriter(socket.getOutputStream());
             reader = new BufferedReader(new InputStreamReader(socket
-                    .getInputStream(),"GBK"));
+                    .getInputStream(),"gbk"));
             // 发送客户端用户基本信息(用户名和ip地址)
             sendMessage(name + "@" + socket.getLocalAddress().toString());
             // 开启接收消息的线程
@@ -353,9 +353,8 @@ public class Client{
                                 JOptionPane.ERROR_MESSAGE);
                         return;// 结束线程
                     } else {// 普通消息
-
                         System.out.println("客户机："+message);
-                        textArea.append(message + "\r\n");
+                        textArea.append(Utils.decoding(message) + "\r\n");
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
