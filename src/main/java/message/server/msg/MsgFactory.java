@@ -1,9 +1,13 @@
 package message.server.msg;
 
 import message.dto.MsgBase;
+import message.dto.MsgVO;
 import message.utils.NetworkUtils;
 import message.utils.PortUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
 import java.util.logging.Logger;
 
 /**
@@ -25,8 +29,27 @@ public class MsgFactory {
         return LazyHolder.INSTANCE;
     }
 
-    public static MsgBase creationMsgBase(String ip,Integer prot) {
+    private static Vector<MsgVO> msgVOS=new Vector<>();
+
+    /**
+     * 获得消息存储器
+     * @return
+     */
+    public static Vector<MsgVO> getMsgVOS() {
+        return msgVOS;
+    }
+    /**
+     * 塞入消息
+     * @param port
+     * @param request
+     */
+    public static  void  put(Integer port,String request){
+        msgVOS.add(new MsgVO(port,request));
+    }
+
+    public static MsgBase creationMsgBase(String ip,Integer prot,String msg) {
         MsgBase msgBase = new MsgBase();
+        msgBase.setResponse(msg);
         msgBase.setIp(ip);
         msgBase.setPort(prot);
         msgBase.setMac(NetworkUtils.getPhysicalNetworkMAC());

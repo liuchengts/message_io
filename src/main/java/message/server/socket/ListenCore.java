@@ -1,10 +1,8 @@
 package message.server.socket;
 
-import message.dto.Constant;
+import message.server.msg.MsgFactory;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -25,42 +23,32 @@ public class ListenCore extends Thread {
 
     /***
      * 启动一个服务监听并且返回当前实例
-     * @param prot
+     * @param serverSocket
      * @return
      */
-    public static ListenCore initListen(int prot) throws Exception {
+    public static synchronized ListenCore initListen(ServerSocket serverSocket) throws Exception {
         ListenCore core = new ListenCore();
-        core.setServerSocket(new ServerSocket(prot));
+        System.out.println("创建了一个监听:" + serverSocket.getInetAddress().getHostAddress() + ":" + serverSocket.getLocalPort());
+        core.setServerSocket(serverSocket);
         core.start();
         return core;
     }
 
     public void run() {
-        System.out.println("监听启动..."+getServerSocket().getLocalPort());
         while (true) {
-            BufferedReader br = null;
             try {
                 Socket socket = getServerSocket().accept();
-                if (null == socket) {
-                    System.out.println("没有监听消息，休息" + Constant.MILLIS + "ms");
-                    sleep(Constant.MILLIS);
-                    continue;
+                BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                StringBuffer lineBuffer = new StringBuffer();
+                String line;
+                while ((line = br.readLine()) != null) {
+                    lineBuffer.append(line);
                 }
-                System.out.println("接收端ip："+socket.getInetAddress().getHostAddress());
-                br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                if (null == br || null == br.readLine()) {
-                    continue;
-                }
-                String str = br.readLine();
-                System.out.println("******************************listen服务端接受到的消息 :" + str);
+                String str = lineBuffer.toString();
+                MsgFactory.put(socket.getPort(),str);
+                System.out.println("******************************listen["+socket.getInetAddress().getHostAddress() + ":" + socket.getLocalPort()+"]服务端接受到的消息 :" + str);
+                br.close();
             } catch (Exception e) {
-                try {
-                    if (null != br) {
-                        br.close();
-                    }
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
                 e.printStackTrace();
             }
         }
