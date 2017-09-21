@@ -389,6 +389,9 @@ public class Server {
             String message = null;
             while (true) {
                 try {
+                    if(socket.isClosed()){
+                        continue;
+                    }
                     message = reader.readLine();// 接收客户端消息
                     if (message.equals("CLOSE"))// 下线命令
                     {
