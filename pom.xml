@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>demo</groupId>
-    <artifactId>message_io_Server</artifactId>
+    <artifactId>message_io_Client</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>message_io</name>
@@ -45,7 +45,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>message.Server</mainClass>
+                            <mainClass>message.Client</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

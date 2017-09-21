@@ -86,7 +86,7 @@ public class Client{
         textArea.setForeground(Color.blue);
         textField = new JTextField();
         txt_port = new JTextField("6666");
-        txt_hostIp = new JTextField("127.0.0.1");
+        txt_hostIp = new JTextField("www.modaolc.com");
         txt_name = new JTextField();
         btn_start = new JButton("连接");
         btn_stop = new JButton("断开");
