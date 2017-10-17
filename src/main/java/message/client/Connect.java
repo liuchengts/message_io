@@ -6,6 +6,7 @@ import message.server.Distribute;
 import message.utils.GsonUtils;
 import org.apache.log4j.Logger;
 
+import java.net.InetAddress;
 import java.net.Socket;
 
 /**
