@@ -13,4 +13,12 @@ public class Msg {
     private String name;//昵称
     private String operate;//操作
     private String msg;//消息内容
+
+//    public String getMsg() {
+//        return MixUtils.decode(msg);
+//    }
+//
+//    public void setMsg(String msg) {
+//        this.msg = MixUtils.encryption(msg);
+//    }
 }

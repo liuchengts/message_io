@@ -53,7 +53,7 @@ public class Distribute {
             //是核心线程进行客户端连接注册，加入客户注册中心
             Client client = null;
             try {
-                Res res = Register.regClient(DEFAULT_PORT, msg.getName(), socket);
+                Res res = Register.regClient(DEFAULT_PORT, msg, socket);
                 client = (Client) res.getObject();
                 if (!res.isFag()) {
                     //客户端检查name不通过
@@ -75,8 +75,9 @@ public class Distribute {
      */
     public static void send(String msg) {
         Map<String, Client> map = Register.getClients(DEFAULT_PORT);
-        for (Client client : map.values()) {
-            send(client, msg);
+        for (String name : map.keySet()) {
+            logger.debug("群发消息："+name);
+            send(map.get(name), msg);
         }
     }
 
