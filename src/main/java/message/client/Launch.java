@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class Launch {
     private static Logger logger = Logger.getLogger(Launch.class);
-    private static String IP = "www.modaolc.com";
+    private static String IP = "127.0.0.1";
     private static Map<Integer, Connect> mapConnect = new HashMap<>();
 
     public static void main(String[] args) {
