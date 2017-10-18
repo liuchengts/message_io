@@ -43,6 +43,9 @@
             <resource>
                 <directory>src/main/resources</directory>
             </resource>
+            <resource>
+                <directory>lib</directory>
+            </resource>
         </resources>
         <plugins>
             <!-- 指定JDK的编译版本 -->
@@ -82,6 +85,7 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
+                            <markersDirectory>${project.build.directory}/lib</markersDirectory>
                             <outputDirectory>${project.build.directory}/lib</outputDirectory>
                         </configuration>
                     </execution>
