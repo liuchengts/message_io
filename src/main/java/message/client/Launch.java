@@ -20,15 +20,10 @@ public class Launch {
     private static String IP = "www.modaolc.com";
     private static Map<Integer, Connect> mapConnect = new HashMap<>();
 
-    public static void main(String[] args) {
-        //启动核心通讯 端口
-        launchConnect();
-    }
-
     /**
      * 初始化连接
      */
-    private static void launchConnect() {
+    public static void launchConnect() {
         Msg msg = new Msg();
         msg.setName("test");
         User user = new User();

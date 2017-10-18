@@ -13,17 +13,11 @@ public class Launch {
     private static Logger logger = Logger.getLogger(Launch.class);
     private static Map<Integer, Listen> mapListen = new HashMap<>();
 
-    public static void main(String[] args) {
-        //启动核心通讯监听 端口6666
-        launchListen(Distribute.DEFAULT_PORT);
-    }
-
-
     /**
      * 在指定端口上启动监听
      * @param port 端口
      */
-    private static boolean launchListen(int port) {
+    public static boolean launchListen(int port) {
         //启动服务器监听
         if(mapListen.containsKey(port)){
             logger.error("监听服务【"+port+"】已存在");
