@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
  */
 public class Distribute {
     private static Logger logger = Logger.getLogger(Distribute.class);
-    public static int DEFAULT_PORT = 8881;//获得服务器当前可用端口列表，推送当前端口到客户端
+    public static int DEFAULT_PORT = 6666;//获得服务器当前可用端口列表，推送当前端口到客户端
 
     /**
      * 接收客户端消息后的分发处理
