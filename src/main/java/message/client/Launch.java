@@ -23,9 +23,9 @@ public class Launch {
     /**
      * 初始化连接
      */
-    public static void launchConnect() {
+    public static String launchConnect(String name) {
         Msg msg = new Msg();
-        msg.setName("test");
+        msg.setName(name);
         User user = new User();
         user.setName(msg.getName());
         try {
@@ -34,7 +34,7 @@ public class Launch {
             e.printStackTrace();
         }
         msg.setMsg(GsonUtils.objectToJson(user));
-        connect(IP, Distribute.DEFAULT_PORT, msg);
+        return  connect(IP, Distribute.DEFAULT_PORT, msg);
     }
 
     /**
@@ -45,18 +45,18 @@ public class Launch {
      * @param msg  消息体
      * @return 返回是否成功
      */
-    private static boolean connect(String ip, int port, Msg msg) {
+    private static String connect(String ip, int port, Msg msg) {
         //启动客户端
         if (mapConnect.containsKey(port)) {
             logger.error("客户端【" + port + "】已存在");
-            return false;
+            return "客户端【" + port + "】已存在";
         }
         try {
             mapConnect.put(port, Connect.initConnect(ip, port, msg));
         } catch (Exception e) {
             logger.error("客户端启动异常", e);
-            return false;
+            return "客户端启动异常";
         }
-        return true;
+        return null;
     }
 }

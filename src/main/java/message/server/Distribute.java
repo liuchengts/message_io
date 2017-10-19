@@ -9,6 +9,7 @@ import message.utils.GsonUtils;
 import java.net.Socket;
 import java.util.Map;
 import java.util.Set;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -26,10 +27,10 @@ public class Distribute {
      * @param socket
      */
     public static void init(String message, Socket socket) {
-        Msg msg= (Msg) GsonUtils.jsonToObject(message,Msg.class);
+        Msg msg = (Msg) GsonUtils.jsonToObject(message, Msg.class);
         //判断服务消息
         if (socket.getLocalPort() == DEFAULT_PORT) {
-            defautDispose(msg,socket);
+            defautDispose(msg, socket);
         } else if (Msg.GROUP.equals(msg.getOperate())) {
             //创建聊天组
         } else if (Msg.CLOSE.equals(msg.getOperate())) {
@@ -57,7 +58,10 @@ public class Distribute {
                 client = (Client) res.getObject();
                 if (!res.isFag()) {
                     //客户端检查name不通过
-                    send(client, res.getMsg());
+                    msg = new Msg();
+                    msg.setMsg(res.getMsg());
+                    msg.setOperate(Msg.ERROR);
+                    send(client, msg);
                     return;
                 }
             } catch (Exception e) {
@@ -66,17 +70,20 @@ public class Distribute {
             }
             //TODO 当前只列出了在线人群，其他功能还未实现，需要扩展user类
             Set<User> users = Register.getUsers();
-            send(GsonUtils.objectToJson(users));
+            msg = new Msg();
+            msg.setMsg(GsonUtils.objectToJson(users));
+            msg.setOperate(Msg.BACK);
+            send(msg);
         }
     }
 
     /**
      * 给当前在线用户发送消息
      */
-    public static void send(String msg) {
+    public static void send(Msg msg) {
         Map<String, Client> map = Register.getClients(DEFAULT_PORT);
         for (String name : map.keySet()) {
-            logger.debug("群发消息："+name);
+            logger.debug("群发消息：" + name);
             send(map.get(name), msg);
         }
     }
@@ -84,9 +91,7 @@ public class Distribute {
     /**
      * 给特定用户发送消息
      */
-    public static void send(Client client, String message) {
-        Msg msg=new Msg();
-        msg.setMsg(message);
+    public static void send(Client client, Msg msg) {
         client.sendMessage(GsonUtils.objectToJson(msg));
     }
 }

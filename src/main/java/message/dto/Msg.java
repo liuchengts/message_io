@@ -9,6 +9,8 @@ import lombok.Data;
 public class Msg {
     public static String GROUP = "group";
     public static String CLOSE = "close";
+    public static String ERROR = "error";
+    public static String BACK = "back";
 
     private String name;//昵称
     private String operate;//操作

@@ -1,4 +1,4 @@
-import message.client.Launch;
+import message.view.Register;
 
 /**
  * Created by apple on 2017/10/18.
@@ -6,7 +6,7 @@ import message.client.Launch;
  */
 public class Client {
     public static void main(String[] args) {
-        //启动核心通讯 端口
-        Launch.launchConnect();
+        Register.init();
     }
+
 }

@@ -4,6 +4,7 @@ import message.dto.Client;
 import message.dto.Msg;
 import message.server.Distribute;
 import message.utils.GsonUtils;
+import message.view.Register;
 import org.apache.log4j.Logger;
 
 import java.net.InetAddress;
@@ -71,6 +72,10 @@ public class Connect extends Thread {
 
             } else if (Msg.CLOSE.equals(msg.getOperate())) {
                 //关闭聊天组
+            } else if (Msg.ERROR.equals(msg.getOperate())) {
+                //验证异常
+                Register register = new Register();
+                register.setError(msg.getMsg());
             } else {
                 //在首页显示消息
 
