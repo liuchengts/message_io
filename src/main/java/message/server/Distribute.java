@@ -47,7 +47,8 @@ public class Distribute {
      */
     public static void defautDispose(Msg msg, Socket socket) {
         if (Msg.GROUP.equals(msg.getOperate())) {
-            //创建聊天组
+            //创建聊天组(在当前列表中找到端口回发给请求客户端，如果没有就进行服务端监听创建)
+
         } else if (Msg.CLOSE.equals(msg.getOperate())) {
             //关闭聊天组
         } else {
@@ -69,9 +70,8 @@ public class Distribute {
                 logger.error("连接服务器失败", e);
             }
             //TODO 当前只列出了在线人群，其他功能还未实现，需要扩展user类
-            Set<User> users = Register.getUsers();
             msg = new Msg();
-            msg.setMsg(GsonUtils.objectToJson(users));
+            msg.setMsg(GsonUtils.objectToJson(Register.getUsers()));
             msg.setOperate(Msg.BACK);
             send(msg);
         }

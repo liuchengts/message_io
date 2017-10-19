@@ -36,6 +36,7 @@ public class Register {
             String res = Launch.launchConnect(nick);
             if (null != res) {
                 setError(res);
+                hide();
                 return;
             }
         });

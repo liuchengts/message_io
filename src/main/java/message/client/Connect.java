@@ -24,7 +24,11 @@ import java.util.Set;
  */
 public class Connect extends Thread {
     private static Logger logger = Logger.getLogger(Connect.class);
-    static Client client;
+    private static Client client;
+
+    public static Client getClient() {
+        return client;
+    }
 
     public static void setClient(Client client) {
         Connect.client = client;
@@ -38,7 +42,7 @@ public class Connect extends Thread {
      * @return 客户端连接实例
      * @throws Exception
      */
-    public static synchronized Connect initConnect(String ip, int port, Msg msg) throws Exception {
+    public static synchronized Client initConnect(String ip, int port, Msg msg) throws Exception {
         Connect core = new Connect();
         Socket socket = new Socket(ip, port);
         Client client = new Client(socket);
@@ -46,7 +50,7 @@ public class Connect extends Thread {
         client.sendMessage(msg);
         logger.debug("创建了一个客户端:" + socket.getInetAddress().getHostAddress() + ":" + socket.getPort());
         core.start();
-        return core;
+        return client;
     }
 
     public void run() {

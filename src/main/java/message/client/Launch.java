@@ -1,5 +1,6 @@
 package message.client;
 
+import message.dto.Client;
 import message.dto.Msg;
 import message.dto.User;
 import message.server.Distribute;
@@ -18,19 +19,29 @@ import java.util.Map;
 public class Launch {
     private static Logger logger = Logger.getLogger(Launch.class);
     private static String IP = "www.modaolc.com";
-    private static Map<Integer, Connect> mapConnect = new HashMap<>();
+    private static Map<Integer, Client> mapConnect = new HashMap<>();
+    private static String nick;
 
-    public static Connect getMapConnect(int port) {
+    public static Client getMapConnect(int port) {
         return mapConnect.get(port);
     }
+
     public static void removeMapConnect(int port) {
-         mapConnect.remove(port);
+        mapConnect.remove(port);
     }
+
+    public static void request(Msg msg) {
+        if (null != msg && null == msg.getName()) {
+            msg.setName(nick);
+        }
+        Launch.getMapConnect(Distribute.DEFAULT_PORT).sendMessage(msg);
+    }
+
     /**
      * 初始化连接
      */
     public static String launchConnect(String name) {
-        if(null==name || "".equals(name)){
+        if (null == name || "".equals(name)) {
             return "昵称不能为空";
         }
         Msg msg = new Msg();
@@ -42,15 +53,25 @@ public class Launch {
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
+
         msg.setMsg(GsonUtils.objectToJson(user));
-        return  connect(IP, Distribute.DEFAULT_PORT, msg);
+        String rs = connect(IP, Distribute.DEFAULT_PORT, msg);
+        if (null == rs) {
+            nick = msg.getName();
+        }
+        return rs;
     }
+
     /**
      * 连接指定端口
      */
-    public static String launchConnect(int port,Msg msg) {
-        return  connect(IP, port, msg);
+    public static String launchConnect(int port, Msg msg) {
+        if (null != msg && null == msg.getName()) {
+            msg.setName(nick);
+        }
+        return connect(IP, port, msg);
     }
+
     /**
      * 在指定端口上启动客户端
      *

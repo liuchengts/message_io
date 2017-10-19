@@ -1,11 +1,16 @@
 package message.view;
 
+import message.client.Connect;
 import message.client.Launch;
+import message.dto.Group;
+import message.dto.Msg;
 import message.dto.User;
+import message.server.Distribute;
+import message.utils.DateUtils;
+import message.utils.GsonUtils;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.xml.crypto.Data;
 import java.util.Set;
 
 /**
@@ -49,16 +54,16 @@ public class Home {
 
     public void connect() {
         //发起连接
-        connect.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                int _port = Integer.valueOf(port.getText().trim());
-                String res = Launch.launchConnect(_port, null);
-                if (null != res) {
-                    setError(res);
-                    return;
-                }
-                Module.getClient(_port);
-            }
+        connect.addActionListener(e -> {
+            int _port = Integer.valueOf(port.getText().trim());
+            //向服务器发起创建端口监听
+            Msg msg=new Msg();
+            msg.setOperate(Msg.GROUP);
+            Group group=new Group();
+            group.setName("test");
+            group.setPort(_port);
+            msg.setMsg(GsonUtils.objectToJson(group));
+            Launch.request(msg);
         });
     }
 }
