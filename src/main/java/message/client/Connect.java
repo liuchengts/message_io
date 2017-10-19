@@ -1,14 +1,21 @@
 package message.client;
 
+import com.google.gson.reflect.TypeToken;
 import message.dto.Client;
 import message.dto.Msg;
+import message.dto.User;
 import message.server.Distribute;
 import message.utils.GsonUtils;
+import message.view.Home;
+import message.view.Module;
 import message.view.Register;
 import org.apache.log4j.Logger;
 
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by apple on 2017/10/17.
@@ -36,21 +43,21 @@ public class Connect extends Thread {
         Socket socket = new Socket(ip, port);
         Client client = new Client(socket);
         core.setClient(client);
-        client.sendMessage(GsonUtils.objectToJson(msg));
-        logger.debug("创建了一个客户端:" + socket.getInetAddress().getHostAddress() + ":" + socket.getLocalPort());
+        client.sendMessage(msg);
+        logger.debug("创建了一个客户端:" + socket.getInetAddress().getHostAddress() + ":" + socket.getPort());
         core.start();
         return core;
     }
 
     public void run() {
-        while (true) {
+        while (client.isFag()) {
             try {
                 String message = client.getReader().readLine();
                 if (null == message) {
                     Thread.sleep(100);
                     continue;
                 }
-                logger.debug("客户端[" + client.getSocket().getLocalPort() + "]接收到消息：" + message);
+                logger.debug("客户端[" + client.getSocket().getPort() + "]接收到消息：" + message);
                 dispose(message);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -66,19 +73,20 @@ public class Connect extends Thread {
     private void dispose(String message) {
         Msg msg = (Msg) GsonUtils.jsonToObject(message, Msg.class);
         //判断服务消息
-        if (client.getSocket().getLocalPort() == Distribute.DEFAULT_PORT) {
+        if (client.getSocket().getPort() == Distribute.DEFAULT_PORT) {
             if (Msg.GROUP.equals(msg.getOperate())) {
                 //创建聊天组
-
             } else if (Msg.CLOSE.equals(msg.getOperate())) {
                 //关闭聊天组
             } else if (Msg.ERROR.equals(msg.getOperate())) {
                 //验证异常
-                Register register = new Register();
-                register.setError(msg.getMsg());
+                Module.getRegister().setError(msg.getMsg());
+                //关闭客户端
+                client.close();
             } else {
-                //在首页显示消息
-
+                //在首页显示注册成功后回传的消息
+                Module.getHome().setOnline((Set<User>) GsonUtils.jsonToObject(msg.getMsg(), new TypeToken<HashSet<User>>() {
+                }.getType()));
             }
         } else {
             //正常消息通讯

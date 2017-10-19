@@ -20,10 +20,19 @@ public class Launch {
     private static String IP = "www.modaolc.com";
     private static Map<Integer, Connect> mapConnect = new HashMap<>();
 
+    public static Connect getMapConnect(int port) {
+        return mapConnect.get(port);
+    }
+    public static void removeMapConnect(int port) {
+         mapConnect.remove(port);
+    }
     /**
      * 初始化连接
      */
     public static String launchConnect(String name) {
+        if(null==name || "".equals(name)){
+            return "昵称不能为空";
+        }
         Msg msg = new Msg();
         msg.setName(name);
         User user = new User();
@@ -36,7 +45,12 @@ public class Launch {
         msg.setMsg(GsonUtils.objectToJson(user));
         return  connect(IP, Distribute.DEFAULT_PORT, msg);
     }
-
+    /**
+     * 连接指定端口
+     */
+    public static String launchConnect(int port,Msg msg) {
+        return  connect(IP, port, msg);
+    }
     /**
      * 在指定端口上启动客户端
      *

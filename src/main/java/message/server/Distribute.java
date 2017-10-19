@@ -29,7 +29,7 @@ public class Distribute {
     public static void init(String message, Socket socket) {
         Msg msg = (Msg) GsonUtils.jsonToObject(message, Msg.class);
         //判断服务消息
-        if (socket.getLocalPort() == DEFAULT_PORT) {
+        if (socket.getLocalPort()  == DEFAULT_PORT) {
             defautDispose(msg, socket);
         } else if (Msg.GROUP.equals(msg.getOperate())) {
             //创建聊天组
@@ -92,6 +92,6 @@ public class Distribute {
      * 给特定用户发送消息
      */
     public static void send(Client client, Msg msg) {
-        client.sendMessage(GsonUtils.objectToJson(msg));
+        client.sendMessage(msg);
     }
 }

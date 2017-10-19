@@ -20,9 +20,9 @@ public class Client {
     private JTextField port;
     private JTextField name;
 
-    public Client(){
+    public Client(Integer port) {
         JFrame frame = new JFrame("主页");
-        frame.setContentPane(new Client().JP);
+        frame.setContentPane(this.JP);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);

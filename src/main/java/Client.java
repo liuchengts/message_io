@@ -1,4 +1,4 @@
-import message.view.Register;
+import message.view.Module;
 
 /**
  * Created by apple on 2017/10/18.
@@ -6,7 +6,7 @@ import message.view.Register;
  */
 public class Client {
     public static void main(String[] args) {
-        Register.init();
+        Module.getRegister();
     }
 
 }
