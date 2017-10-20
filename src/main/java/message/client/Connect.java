@@ -2,6 +2,7 @@ package message.client;
 
 import com.google.gson.reflect.TypeToken;
 import message.dto.Client;
+import message.dto.Group;
 import message.dto.Msg;
 import message.dto.User;
 import message.server.Distribute;
@@ -79,7 +80,15 @@ public class Connect extends Thread {
         //判断服务消息
         if (client.getSocket().getPort() == Distribute.DEFAULT_PORT) {
             if (Msg.GROUP.equals(msg.getOperate())) {
-                //创建聊天组
+                //创建聊天组失败了
+                Group group = (Group) GsonUtils.jsonToObject(msg.getMsg(), Group.class);
+                if (null==group.getMsg()){
+                    //成功
+                    Module.getClient(group);
+                }else {
+                    String err="端口："+group.getPort()+"失败,"+group.getMsg();
+                    Module.getHome().setError(err);
+                }
             } else if (Msg.CLOSE.equals(msg.getOperate())) {
                 //关闭聊天组
             } else if (Msg.ERROR.equals(msg.getOperate())) {

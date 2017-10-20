@@ -13,12 +13,14 @@ import java.util.*;
  */
 public class Register {
     private static Map<Integer, Map<String, Client>> mapClient = new HashMap<>();
-    private static List<Group> listGroup = new ArrayList<>();
+    private static Map<Integer, Group> mapGroup = new HashMap<>();
     private static Set<User> listUser = new HashSet<>();
+
     /**
      * 客户端向服务器注册
+     *
      * @param key    端口号
-     * @param msg   信息
+     * @param msg    信息
      * @param socket 当前连接信息
      * @return false表示存在了相同名称的用户，true表示成功
      */
@@ -40,9 +42,34 @@ public class Register {
             mapClient.get(key).put(msg.getName(), client);
         }
         //将带入的user对象更新到缓存
-        User user= (User)GsonUtils.jsonToObject(msg.getMsg(),User.class);
+        User user = (User) GsonUtils.jsonToObject(msg.getMsg(), User.class);
         listUser.add(user);
         return res;
+    }
+
+    /**
+     * 创建聊天组
+     *
+     * @param msg
+     * @return
+     */
+    public static Group regGroup(Msg msg) {
+        Group group = (Group) GsonUtils.jsonToObject(msg.getMsg(), Group.class);
+        group.setMsg(null);
+        Group _group = getGroup(group.getPort());
+        if (null == _group) {
+            //创建服务器监听
+            String m = Launch.launchListen(group.getPort());
+            if (m != null) {
+                group.setServerSocket(Launch.getListen(group.getPort()));
+                mapGroup.put(group.getPort(), group);
+            } else {
+                group.setMsg(m);
+            }
+        } else {
+            group = _group;
+        }
+        return group;
     }
 
     /***
@@ -58,7 +85,7 @@ public class Register {
      * @return
      */
     public static Map<String, Client> getClients(Integer port) {
-        if(!mapClient.containsKey(port)){
+        if (!mapClient.containsKey(port)) {
             return null;
         }
         return mapClient.get(port);
@@ -85,11 +112,14 @@ public class Register {
     }
 
     /***
-     * 获得在线聊天组
+     * 根据端口获得在线聊天组
      * @return
      */
-    public static List<Group> getGroup() {
-        return listGroup;
+    public static Group getGroup(int port) {
+        if (!mapGroup.containsKey(port)) {
+            return null;
+        }
+        return mapGroup.get(port);
     }
 
     /**

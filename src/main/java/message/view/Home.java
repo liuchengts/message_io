@@ -10,7 +10,6 @@ import message.utils.DateUtils;
 import message.utils.GsonUtils;
 
 import javax.swing.*;
-import javax.xml.crypto.Data;
 import java.util.Set;
 
 /**
@@ -49,18 +48,23 @@ public class Home {
     }
 
     public void setError(String msg) {
-        error.append(msg);
+        error.append(msg + " \r\n");
     }
 
     public void connect() {
         //发起连接
         connect.addActionListener(e -> {
             int _port = Integer.valueOf(port.getText().trim());
+            //检查本地是否存在相同端口的客户端
+            if (null != Launch.getMapConnect(_port)) {
+                setError("已经有一个相同的会话了");
+                return;
+            }
             //向服务器发起创建端口监听
-            Msg msg=new Msg();
+            Msg msg = new Msg();
             msg.setOperate(Msg.GROUP);
-            Group group=new Group();
-            group.setName("test");
+            Group group = new Group();
+            group.setNameGroup(_port + "");
             group.setPort(_port);
             msg.setMsg(GsonUtils.objectToJson(group));
             Launch.request(msg);

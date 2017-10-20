@@ -1,5 +1,7 @@
 package message.view;
 
+import message.dto.Group;
+
 import javax.swing.*;
 
 /**
@@ -20,7 +22,7 @@ public class Client {
     private JTextField port;
     private JTextField name;
 
-    public Client(Integer port) {
+    public Client(Group group) {
         JFrame frame = new JFrame("主页");
         frame.setContentPane(this.JP);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

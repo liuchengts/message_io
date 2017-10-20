@@ -18,12 +18,12 @@ public class Listen extends Thread {
      * @param port
      * @return
      */
-    public static synchronized Listen initListen(int port) throws Exception {
+    public static synchronized ServerSocket initListen(int port) throws Exception {
         Listen core = new Listen();
         serverSocket=new ServerSocket(port);
         logger.debug("创建了一个监听:" + serverSocket.getInetAddress().getHostAddress() + ":" + serverSocket.getLocalPort());
         core.start();
-        return core;
+        return serverSocket;
     }
 
     public void run() {

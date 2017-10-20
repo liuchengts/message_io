@@ -1,5 +1,6 @@
 package message.view;
 
+import message.dto.Group;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
@@ -43,24 +44,24 @@ public class Module {
     /**
      * 发起客户端
      *
-     * @param port
+     * @param group
      * @return
      */
-    public static Client getClient(Integer port) {
-        if (null == port) {
+    public static Client getClient(Group group) {
+        if (null == group || null == group.getPort()) {
             logger.error("端口不能为空");
             return null;
         }
         Client client;
-        if (null == localClient.get(port)) {
+        if (null == localClient.get(group.getPort())) {
             if (localClient.size() >= max) {
                 logger.error("客户端超过了连接最大限制");
                 return null;
             }
-            client = new Client(port);
-            localClient.put(port, client);
+            client = new Client(group);
+            localClient.put(group.getPort(), client);
         } else {
-            client = localClient.get(port);
+            client = localClient.get(group.getPort());
         }
         return client;
     }

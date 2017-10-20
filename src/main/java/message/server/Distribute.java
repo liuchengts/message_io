@@ -1,9 +1,6 @@
 package message.server;
 
-import message.dto.Client;
-import message.dto.Msg;
-import message.dto.Res;
-import message.dto.User;
+import message.dto.*;
 import message.utils.GsonUtils;
 
 import java.net.Socket;
@@ -29,7 +26,7 @@ public class Distribute {
     public static void init(String message, Socket socket) {
         Msg msg = (Msg) GsonUtils.jsonToObject(message, Msg.class);
         //判断服务消息
-        if (socket.getLocalPort()  == DEFAULT_PORT) {
+        if (socket.getLocalPort() == DEFAULT_PORT) {
             defautDispose(msg, socket);
         } else if (Msg.GROUP.equals(msg.getOperate())) {
             //创建聊天组
@@ -47,33 +44,39 @@ public class Distribute {
      */
     public static void defautDispose(Msg msg, Socket socket) {
         if (Msg.GROUP.equals(msg.getOperate())) {
-            //创建聊天组(在当前列表中找到端口回发给请求客户端，如果没有就进行服务端监听创建)
-
+            //创建聊天组(在当前列表中找到端口，如果没有就进行服务端监听创建)
+            Group group = Register.regGroup(msg);
+            msg = new Msg();
+            msg.setOperate(Msg.GROUP);
+            if (null != group) {
+                msg.setMsg(GsonUtils.objectToJson(group));
+            }
+            send(msg);
         } else if (Msg.CLOSE.equals(msg.getOperate())) {
             //关闭聊天组
         } else {
             //是核心线程进行客户端连接注册，加入客户注册中心
-            Client client = null;
             try {
                 Res res = Register.regClient(DEFAULT_PORT, msg, socket);
-                client = (Client) res.getObject();
+                Client client = (Client) res.getObject();
                 if (!res.isFag()) {
                     //客户端检查name不通过
                     msg = new Msg();
                     msg.setMsg(res.getMsg());
                     msg.setOperate(Msg.ERROR);
                     send(client, msg);
-                    return;
+                } else {
+                    //TODO 当前只列出了在线人群，其他功能还未实现，需要扩展user类
+                    msg = new Msg();
+                    msg.setMsg(GsonUtils.objectToJson(Register.getUsers()));
+                    msg.setOperate(Msg.BACK);
+                    send(msg);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 logger.error("连接服务器失败", e);
             }
-            //TODO 当前只列出了在线人群，其他功能还未实现，需要扩展user类
-            msg = new Msg();
-            msg.setMsg(GsonUtils.objectToJson(Register.getUsers()));
-            msg.setOperate(Msg.BACK);
-            send(msg);
+
         }
     }
 
