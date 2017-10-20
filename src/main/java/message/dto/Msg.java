@@ -11,6 +11,8 @@ public class Msg {
     public static String CLOSE = "close";
     public static String ERROR = "error";
     public static String BACK = "back";
+    public static String END = "@end";
+
 
     private String name;//昵称
     private String operate;//操作

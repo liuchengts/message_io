@@ -1,4 +1,6 @@
 package message.server;
+
+import message.dto.Msg;
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -20,7 +22,7 @@ public class Listen extends Thread {
      */
     public static synchronized ServerSocket initListen(int port) throws Exception {
         Listen core = new Listen();
-        serverSocket=new ServerSocket(port);
+        serverSocket = new ServerSocket(port);
         logger.debug("创建了一个监听:" + serverSocket.getInetAddress().getHostAddress() + ":" + serverSocket.getLocalPort());
         core.start();
         return serverSocket;
@@ -35,10 +37,14 @@ public class Listen extends Thread {
                 String line;
                 while ((line = br.readLine()) != null) {
                     lineBuffer.append(line);
+                    if (line.endsWith(Msg.END)) {
+                        line = lineBuffer.toString();
+                        line = line.replace(Msg.END, "");
+                        logger.debug("******************************listen[" + socket.getInetAddress().getHostAddress() + ":" + socket.getLocalPort() + "]服务端接受到的消息 :" + line);
+                        Distribute.init(line, socket);
+                        lineBuffer.delete(0,lineBuffer.length());
+                    }
                 }
-                String str = lineBuffer.toString();
-                logger.debug("******************************listen["+socket.getInetAddress().getHostAddress() + ":" + socket.getLocalPort()+"]服务端接受到的消息 :" + str);
-                Distribute.init(str,socket);
                 br.close();
             } catch (Exception e) {
                 e.printStackTrace();

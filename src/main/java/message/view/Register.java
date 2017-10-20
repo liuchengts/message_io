@@ -36,13 +36,14 @@ public class Register {
             String res = Launch.launchConnect(nick);
             if (null != res) {
                 setError(res);
-                hide();
                 return;
             }
+            hide();
         });
     }
 
     private void hide() {
-        System.out.println("home");
+        System.out.println("隐藏当前窗口");
+        frame.setVisible(false);
     }
 }

@@ -25,15 +25,7 @@ import java.util.Set;
  */
 public class Connect extends Thread {
     private static Logger logger = Logger.getLogger(Connect.class);
-    private static Client client;
-
-    public static Client getClient() {
-        return client;
-    }
-
-    public static void setClient(Client client) {
-        Connect.client = client;
-    }
+    static Client client;
 
     /***
      * 启动一个客户端服务并且返回当前实例
@@ -46,8 +38,7 @@ public class Connect extends Thread {
     public static synchronized Client initConnect(String ip, int port, Msg msg) throws Exception {
         Connect core = new Connect();
         Socket socket = new Socket(ip, port);
-        Client client = new Client(socket);
-        core.setClient(client);
+        client = new Client(socket);
         client.sendMessage(msg);
         logger.debug("创建了一个客户端:" + socket.getInetAddress().getHostAddress() + ":" + socket.getPort());
         core.start();
@@ -62,6 +53,7 @@ public class Connect extends Thread {
                     Thread.sleep(100);
                     continue;
                 }
+                message = message.replace(Msg.END, "");
                 logger.debug("客户端[" + client.getSocket().getPort() + "]接收到消息：" + message);
                 dispose(message);
             } catch (Exception e) {

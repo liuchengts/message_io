@@ -33,7 +33,7 @@ public class Client {
     public void close() {
         try {
             //通知服务器断开服务
-            Msg msg=new Msg();
+            Msg msg = new Msg();
             msg.setOperate(Msg.CLOSE);
             sendMessage(msg);
             if (reader != null) {
@@ -45,7 +45,7 @@ public class Client {
             if (socket != null) {
                 socket.close();
             }
-            fag=false;
+            fag = false;
             Launch.removeMapConnect(socket.getPort());
         } catch (IOException e) {
             e.printStackTrace();
@@ -58,14 +58,11 @@ public class Client {
      * @param msg
      */
     public void sendMessage(Msg msg) {
-        writer.println(GsonUtils.objectToJson(msg));
-        writer.flush();
-        try {
-            if (!socket.isClosed()) {
-                socket.shutdownOutput();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (null == msg) {
+            return;
         }
+        System.out.println(GsonUtils.objectToJson(msg) + Msg.END);
+        writer.println(GsonUtils.objectToJson(msg) + Msg.END);
+        writer.flush();
     }
 }
