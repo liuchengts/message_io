@@ -67,7 +67,7 @@ public class Home {
             group.setNameGroup(_port + "");
             group.setPort(_port);
             msg.setMsg(GsonUtils.objectToJson(group));
-            Launch.request(msg);
+            Launch.request(Distribute.DEFAULT_PORT,msg);
         });
     }
 }

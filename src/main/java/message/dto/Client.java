@@ -61,7 +61,6 @@ public class Client {
         if (null == msg) {
             return;
         }
-        System.out.println(GsonUtils.objectToJson(msg) + Msg.END);
         writer.println(GsonUtils.objectToJson(msg) + Msg.END);
         writer.flush();
     }

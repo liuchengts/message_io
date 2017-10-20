@@ -3,6 +3,7 @@ package message.server;
 import message.dto.*;
 import message.utils.GsonUtils;
 
+import java.io.IOException;
 import java.net.Socket;
 import java.util.Map;
 import java.util.Set;
@@ -28,10 +29,9 @@ public class Distribute {
         //判断服务消息
         if (socket.getLocalPort() == DEFAULT_PORT) {
             defautDispose(msg, socket);
-        } else if (Msg.GROUP.equals(msg.getOperate())) {
-            //创建聊天组
         } else if (Msg.CLOSE.equals(msg.getOperate())) {
-            //关闭聊天组
+            //退出聊天组，将当前name从聊天组名单中去掉，判断聊天组成员为空 就关闭掉这个聊天组
+            Register.leaveUser(msg.getName(),socket.getLocalPort());
         } else {
             //发送消息
         }
@@ -53,7 +53,8 @@ public class Distribute {
             }
             send(msg);
         } else if (Msg.CLOSE.equals(msg.getOperate())) {
-            //关闭聊天组
+            //退出聊天组，将当前name从聊天组名单中去掉，判断聊天组成员为空 就关闭掉这个聊天组
+            Register.leaveUser(msg.getName(),socket.getLocalPort());
         } else {
             //是核心线程进行客户端连接注册，加入客户注册中心
             try {

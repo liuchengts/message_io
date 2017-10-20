@@ -3,6 +3,7 @@ package message.dto;
 import lombok.Data;
 
 import java.net.ServerSocket;
+import java.util.Set;
 
 /**
  * Created by apple on 2017/10/11.
@@ -15,4 +16,5 @@ public class Group {
     private String nameGroup;
     private ServerSocket serverSocket;
     private String msg;
+    private Set<User> users;
 }

@@ -66,5 +66,15 @@ public class Module {
         return client;
     }
 
+    /**
+     * 根据端口移除客户端
+     * @param port
+     */
+    public static void removeClient(int port) {
+        if (!localClient.containsKey(port)) {
+           return;
+        }
+        localClient.remove(port);
+    }
 
 }

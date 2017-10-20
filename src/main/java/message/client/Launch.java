@@ -30,11 +30,11 @@ public class Launch {
         mapConnect.remove(port);
     }
 
-    public static void request(Msg msg) {
+    public static void request(int port,Msg msg) {
         if (null != msg && null == msg.getName()) {
             msg.setName(nick);
         }
-        Launch.getMapConnect(Distribute.DEFAULT_PORT).sendMessage(msg);
+        Launch.getMapConnect(port).sendMessage(msg);
     }
 
     /**

@@ -4,6 +4,7 @@ package message.server;
 import message.dto.*;
 import message.utils.GsonUtils;
 
+import java.io.IOException;
 import java.net.Socket;
 import java.util.*;
 
@@ -57,10 +58,12 @@ public class Register {
         Group group = (Group) GsonUtils.jsonToObject(msg.getMsg(), Group.class);
         group.setMsg(null);
         Group _group = getGroup(group.getPort());
+        Set<User> users = new HashSet<>();
+        users.add(getUser(msg.getName()));
         if (null == _group) {
             //创建服务器监听
             String m = Launch.launchListen(group.getPort());
-            if (m != null) {
+            if (m == null) {
                 group.setServerSocket(Launch.getListen(group.getPort()));
                 mapGroup.put(group.getPort(), group);
             } else {
@@ -68,7 +71,10 @@ public class Register {
             }
         } else {
             group = _group;
+            users = group.getUsers();
         }
+        group.setUsers(users);
+        group.setServerSocket(null);//这个socket对象太大 会导致堆栈内存溢出
         return group;
     }
 
@@ -81,34 +87,24 @@ public class Register {
     }
 
     /***
+     * 根据昵称获得在线user信息
+     * @return
+     */
+    public static User getUser(String name) {
+        for (User user : listUser) {
+            if (user.getName().equals(name)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
+    /***
      * 获得端口号在线客户端
      * @return
      */
     public static Map<String, Client> getClients(Integer port) {
-        if (!mapClient.containsKey(port)) {
-            return null;
-        }
         return mapClient.get(port);
-    }
-
-    /***
-     * 获得端口号在线列表
-     * @return
-     */
-    public static Set<User> getUsers(Integer port) {
-        Set<User> list = new HashSet<>();
-        for (Integer in : mapClient.keySet()) {
-            if (!in.equals(port)) {
-                continue;
-            }
-            for (String name : mapClient.get(in).keySet()) {
-                User user = new User();
-                user.setName(name);
-                user.setIp(mapClient.get(in).get(name).getSocket().getLocalAddress().toString());
-                list.add(user);
-            }
-        }
-        return list;
     }
 
     /***
@@ -116,27 +112,39 @@ public class Register {
      * @return
      */
     public static Group getGroup(int port) {
-        if (!mapGroup.containsKey(port)) {
-            return null;
-        }
         return mapGroup.get(port);
+    }
+
+    /***
+     * 获得端口号在线列表
+     * @return
+     */
+    public static Set<User> getUsers(Integer port) {
+        return getGroup(port).getUsers();
     }
 
     /**
      * 用户离开port房间
      *
      * @param name 用户昵称
-     * @param port 端口号
-     * @return true成功
+     * @param port port
      */
-
-    public static boolean leaveUser(String name, Integer port) {
-        try {
-            mapClient.get(port).get(name).getSocket().close();
-            mapClient.get(port).remove(name);
-        } catch (Exception e) {
-            e.printStackTrace();
+    public static void leaveUser(String name, Integer port) {
+        Set<User> users = getUsers(port);
+        for (User user : users) {
+            if (user.getName().equals(name)) {
+                users.remove(user);
+                break;
+            }
         }
-        return true;
+        Group group = getGroup(port);
+        if (group.getUsers().size() == 0) {
+            try {
+                group.getServerSocket().close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
+
 }

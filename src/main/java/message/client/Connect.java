@@ -72,12 +72,15 @@ public class Connect extends Thread {
         //判断服务消息
         if (client.getSocket().getPort() == Distribute.DEFAULT_PORT) {
             if (Msg.GROUP.equals(msg.getOperate())) {
-                //创建聊天组失败了
                 Group group = (Group) GsonUtils.jsonToObject(msg.getMsg(), Group.class);
                 if (null==group.getMsg()){
                     //成功
+                    //发起连接
+                    Launch.launchConnect(group.getPort(),null);
+                    //初始化界面
                     Module.getClient(group);
                 }else {
+                    //创建聊天组失败了
                     String err="端口："+group.getPort()+"失败,"+group.getMsg();
                     Module.getHome().setError(err);
                 }
